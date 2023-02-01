@@ -1,7 +1,15 @@
 const router = require("express").Router();
 
-const { createExercise } = require("../controllers/exerciseController");
+const {
+  createExercise,
+  getAllExercises,
+} = require("../controllers/exerciseController");
 
-router.route("/").post(createExercise);
+const { authenticateUser } = require("../middleware/authentication");
+
+router
+  .route("/")
+  .post(authenticateUser, createExercise)
+  .get(authenticateUser, getAllExercises);
 
 module.exports = router;
