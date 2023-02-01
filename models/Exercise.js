@@ -23,7 +23,7 @@ const ExerciseSchema = new mongoose.Schema({
     {
       reps: { type: Number, required: true },
       weight: { type: Number, required: true },
-      rir: { type: Number, required: true },
+      rir: { type: Number, required: true, default: 0 },
     },
   ],
 });
