@@ -5,6 +5,8 @@ import {
   SETUP_USER_SUCCESS,
   SETUP_USER_ERROR,
   LOGOUT_USER,
+  GET_CURRENT_USER_BEGIN,
+  GET_CURRENT_USER_SUCCESS,
 } from "./actions";
 import { initialState } from "./appContext";
 
@@ -48,6 +50,20 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,
+    };
+  }
+  if (action.type === GET_CURRENT_USER_BEGIN) {
+    return {
+      ...state,
+      userLoading: true,
+      showAlert: false,
+    };
+  }
+  if (action.type === GET_CURRENT_USER_SUCCESS) {
+    return {
+      ...state,
+      userLoading: false,
+      user: action.payload.user,
     };
   }
   if (action.type === LOGOUT_USER) {

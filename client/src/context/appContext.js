@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useContext } from "react";
+import React, { useEffect, useReducer, useContext } from "react";
 import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
@@ -6,6 +6,8 @@ import {
   SETUP_USER_SUCCESS,
   SETUP_USER_ERROR,
   LOGOUT_USER,
+  GET_CURRENT_USER_BEGIN,
+  GET_CURRENT_USER_SUCCESS,
 } from "./actions";
 import reducer from "./reducer";
 import axios from "axios";
@@ -17,7 +19,7 @@ export const initialState = {
   alertType: "",
   user: null,
   // get current user
-  // userLoading: false,
+  userLoading: false,
 };
 
 const AppContext = React.createContext();
@@ -63,6 +65,19 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const getCurrentUser = async () => {
+    dispatch({ type: GET_CURRENT_USER_BEGIN });
+    try {
+      const { data } = await authFetch("/auth/getCurrentUser");
+      const { user } = data;
+
+      dispatch({ type: GET_CURRENT_USER_SUCCESS, payload: { user } });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      logoutUser();
+    }
+  };
+
   const logoutUser = async () => {
     await authFetch("/auth/logout");
     dispatch({ type: LOGOUT_USER });
@@ -78,6 +93,10 @@ const AppProvider = ({ children }) => {
       dispatch({ type: CLEAR_ALERT });
     }, 3000);
   };
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
 
   return (
     <AppContext.Provider
