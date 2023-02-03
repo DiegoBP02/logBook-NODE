@@ -1,5 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Landing, Register, Error, Dashboard, ProtectedRoute } from "./pages";
+import {
+  Landing,
+  Register,
+  Error,
+  SharedLayout,
+  ProtectedRoute,
+  SingleMuscle,
+} from "./pages";
 
 function App() {
   return (
@@ -9,10 +16,19 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <SharedLayout />
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/singleMuscle/:id"
+          element={
+            <ProtectedRoute>
+              <SingleMuscle />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/register" element={<Register />} />
         <Route path="/landing" element={<Landing />} />
         <Route path="*" element={<Error />} />

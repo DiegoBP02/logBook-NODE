@@ -8,6 +8,9 @@ import {
   LOGOUT_USER,
   GET_CURRENT_USER_BEGIN,
   GET_CURRENT_USER_SUCCESS,
+  GET_MUSCLES_BEGIN,
+  GET_MUSCLES_SUCCESS,
+  GET_MUSCLES_ERROR,
 } from "./actions";
 import reducer from "./reducer";
 import axios from "axios";
@@ -18,6 +21,8 @@ export const initialState = {
   alertText: "",
   alertType: "",
   user: null,
+  // muscles
+  muscles: [],
   // get current user
   userLoading: false,
 };
@@ -78,6 +83,20 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const getMuscles = async () => {
+    dispatch({ type: GET_MUSCLES_BEGIN });
+    try {
+      const { data } = await axios.get("/api/v1/muscle");
+      const musclesData = data.muscles.map(({ name, _id }) => ({ name, _id }));
+      dispatch({
+        type: GET_MUSCLES_SUCCESS,
+        payload: musclesData,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const logoutUser = async () => {
     await authFetch("/auth/logout");
     dispatch({ type: LOGOUT_USER });
@@ -100,7 +119,7 @@ const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider
-      value={{ ...state, displayAlert, setupUser, logoutUser }}
+      value={{ ...state, displayAlert, setupUser, logoutUser, getMuscles }}
     >
       {children}
     </AppContext.Provider>

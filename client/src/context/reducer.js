@@ -7,6 +7,9 @@ import {
   LOGOUT_USER,
   GET_CURRENT_USER_BEGIN,
   GET_CURRENT_USER_SUCCESS,
+  GET_MUSCLES_BEGIN,
+  GET_MUSCLES_SUCCESS,
+  GET_MUSCLES_ERROR,
 } from "./actions";
 import { initialState } from "./appContext";
 
@@ -67,7 +70,23 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === LOGOUT_USER) {
-    return { ...initialState, userLoading: false };
+    return {
+      ...initialState,
+      userLoading: false,
+    };
+  }
+  if (action.type === GET_MUSCLES_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    };
+  }
+  if (action.type === GET_MUSCLES_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      muscles: action.payload,
+    };
   }
   throw new Error(`no such action: ${action.type}`);
 };
