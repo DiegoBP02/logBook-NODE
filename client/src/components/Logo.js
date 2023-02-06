@@ -1,4 +1,5 @@
 import logo from "../assets/images/logo.png";
+import { Link } from "react-router-dom";
 
 const Logo = ({ center, noMargin, widthFix }) => {
   let className = "nav";
@@ -12,10 +13,10 @@ const Logo = ({ center, noMargin, widthFix }) => {
     className += " widthFix";
   }
   return (
-    <nav className={className}>
+    <Link className={className} to="/">
       <img src={logo} alt="logo image" />
       <h2>Todo List</h2>
-    </nav>
+    </Link>
   );
 };
 export default Logo;

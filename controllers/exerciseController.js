@@ -6,7 +6,7 @@ const Exercise = require("../models/Exercise");
 const createExercise = async (req, res) => {
   const { muscle } = req.body;
 
-  const muscles = await (await Muscle.find({})).map(({ name }) => name);
+  const muscles = (await Muscle.find({})).map(({ name }) => name);
   const isMuscleValid = await Muscle.findOne({ name: muscle });
   if (!isMuscleValid) {
     throw new CustomError.BadRequestError(
@@ -36,4 +36,34 @@ const getSingleMuscleExercises = async (req, res) => {
   res.status(StatusCodes.OK).json({ muscle });
 };
 
-module.exports = { createExercise, getAllExercises, getSingleMuscleExercises };
+const getExercisesByData = async (req, res) => {
+  const muscleId = req.params.muscleId;
+  const targetDate = new Date(req.params.createdAt);
+  const startOfDay = new Date(targetDate.setHours(0, 0, 0, 0));
+  const endOfDay = new Date(targetDate.setHours(23, 59, 59, 999));
+
+  const muscleName = (await Muscle.findOne({ _id: muscleId })).name;
+
+  const exercises = await Exercise.find({
+    createdAt: {
+      $gte: startOfDay,
+      $lt: endOfDay,
+    },
+    muscle: muscleName,
+  });
+
+  if (!exercises) {
+    throw new CustomError.BadRequestError(
+      "There are no exercises created on the given date!"
+    );
+  }
+
+  res.status(StatusCodes.OK).json({ exercises, muscleId });
+};
+
+module.exports = {
+  createExercise,
+  getAllExercises,
+  getSingleMuscleExercises,
+  getExercisesByData,
+};

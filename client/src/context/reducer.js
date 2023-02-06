@@ -40,6 +40,7 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
+      userLoading: false,
       user: action.payload.user,
       showAlert: true,
       alertType: "success",
