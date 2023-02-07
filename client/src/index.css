@@ -199,7 +199,7 @@ ul {
 
 .form {
   width: 90vw;
-  max-width: var(--fixed-width);
+  max-width: fit-content;
   background: var(--white);
   border-radius: var(--borderRadius);
   box-shadow: var(--shadow-2);
@@ -232,8 +232,6 @@ ul {
   height: 35px;
 }
 .form-row {
-  margin-bottom: 1rem;
-
   text-align: start;
 }
 

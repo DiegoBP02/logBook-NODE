@@ -20,6 +20,10 @@ const ExerciseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    date: {
+      type: String,
+      required: true,
+    },
     sets: [
       {
         reps: { type: Number, required: true },

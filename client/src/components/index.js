@@ -6,6 +6,7 @@ import Logo from "./Logo";
 import Navbar from "./Navbar";
 import SingleExercise from "./SingleExercise";
 import SingleDate from "./SingleDate";
+import AddWorkout from "./AddWorkout";
 
 export {
   Logo,
@@ -16,4 +17,5 @@ export {
   Navbar,
   SingleExercise,
   SingleDate,
+  AddWorkout,
 };

@@ -1,4 +1,12 @@
-const FormRow = ({ type, name, value, handleChange, labelText, noLabel }) => {
+const FormRow = ({
+  type,
+  name,
+  value,
+  handleChange,
+  labelText,
+  noLabel,
+  min,
+}) => {
   return (
     <div className="form-row">
       {!noLabel && (
@@ -13,6 +21,7 @@ const FormRow = ({ type, name, value, handleChange, labelText, noLabel }) => {
         autoComplete="on"
         onChange={handleChange}
         className="form-input"
+        min={min ? min : null}
       />
     </div>
   );

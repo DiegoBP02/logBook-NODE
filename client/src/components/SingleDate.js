@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
 import Exercises from "./SingleExercise";
 
 const SingleDate = () => {

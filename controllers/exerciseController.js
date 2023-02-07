@@ -4,17 +4,16 @@ const CustomError = require("../errors");
 const Exercise = require("../models/Exercise");
 
 const createExercise = async (req, res) => {
-  const { muscle } = req.body;
+  const { muscleId } = req.body;
 
-  const muscles = (await Muscle.find({})).map(({ name }) => name);
-  const isMuscleValid = await Muscle.findOne({ name: muscle });
-  if (!isMuscleValid) {
+  const muscle = await Muscle.findOne({ _id: muscleId });
+  if (!muscle) {
     throw new CustomError.BadRequestError(
-      `There is no ${muscle} category, categories available: ${muscles}`
+      `There is no ${muscleId} muscle category id!`
     );
   }
 
-  req.body.muscleId = isMuscleValid._id;
+  req.body.muscle = muscle.name;
   req.body.user = req.user.userId;
 
   const exercise = await Exercise.create(req.body);
@@ -38,17 +37,12 @@ const getSingleMuscleExercises = async (req, res) => {
 
 const getExercisesByData = async (req, res) => {
   const muscleId = req.params.muscleId;
-  const targetDate = new Date(req.params.createdAt);
-  const startOfDay = new Date(targetDate.setHours(0, 0, 0, 0));
-  const endOfDay = new Date(targetDate.setHours(23, 59, 59, 999));
+  const date = req.params.date;
 
   const muscleName = (await Muscle.findOne({ _id: muscleId })).name;
 
   const exercises = await Exercise.find({
-    createdAt: {
-      $gte: startOfDay,
-      $lt: endOfDay,
-    },
+    date,
     muscle: muscleName,
   });
 

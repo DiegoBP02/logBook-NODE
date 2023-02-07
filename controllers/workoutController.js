@@ -4,11 +4,7 @@ const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 
 const createWorkout = async (req, res) => {
-  const { date, muscleId } = req.body;
-
-  const [day, month, year] = date.split("/");
-  const formattedDate = new Date(year, month - 1, day);
-  formattedDate.toISOString();
+  const { muscleId } = req.body;
 
   const isMuscleValid = await Muscle.findOne({ _id: muscleId });
   if (!isMuscleValid) {
@@ -29,7 +25,7 @@ const createWorkout = async (req, res) => {
 const getAllWorkouts = async (req, res) => {
   const { muscleId } = req.params;
   const { userId } = req.user;
-  console.log(muscleId, userId);
+
   const workouts = await Workout.find({ userId, muscleId });
   if (!workouts) {
     throw new CustomError.BadRequestError(

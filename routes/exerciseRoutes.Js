@@ -13,6 +13,6 @@ router
   .route("/")
   .post(authenticateUser, createExercise)
   .get(authenticateUser, getAllExercises);
-router.route("/:createdAt/:muscleId").get(authenticateUser, getExercisesByData);
+router.route("/:date/:muscleId").get(authenticateUser, getExercisesByData);
 
 module.exports = router;
