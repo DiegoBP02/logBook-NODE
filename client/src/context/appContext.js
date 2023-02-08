@@ -11,6 +11,18 @@ import {
   GET_MUSCLES_BEGIN,
   GET_MUSCLES_SUCCESS,
   GET_MUSCLES_ERROR,
+  GET_WORKOUTS_BEGIN,
+  GET_WORKOUTS_SUCCESS,
+  GET_WORKOUTS_ERROR,
+  ADD_WORKOUT_BEGIN,
+  ADD_WORKOUT_SUCCESS,
+  ADD_WORKOUT_ERROR,
+  GET_EXERCISES_BEGIN,
+  GET_EXERCISES_SUCCESS,
+  GET_EXERCISES_ERROR,
+  ADD_SET_BEGIN,
+  ADD_SET_SUCCESS,
+  ADD_SET_ERROR,
 } from "./actions";
 import reducer from "./reducer";
 import axios from "axios";
@@ -21,10 +33,11 @@ export const initialState = {
   alertText: "",
   alertType: "",
   user: null,
-  // muscles
   muscles: [],
-  // get current user
   userLoading: false,
+  workouts: [],
+  sets: [],
+  exerciseLoading: false,
 };
 
 const AppContext = React.createContext();
@@ -86,13 +99,17 @@ const AppProvider = ({ children }) => {
   const getMuscles = async () => {
     dispatch({ type: GET_MUSCLES_BEGIN });
     try {
-      const { data } = await axios.get("/api/v1/muscle");
+      const { data } = await authFetch.get("/muscle");
       const musclesData = data.muscles.map(({ name, _id }) => ({ name, _id }));
       dispatch({
         type: GET_MUSCLES_SUCCESS,
         payload: musclesData,
       });
     } catch (error) {
+      dispatch({
+        type: GET_MUSCLES_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
       console.log(error);
     }
   };
@@ -113,13 +130,84 @@ const AppProvider = ({ children }) => {
     }, 3000);
   };
 
+  const getWorkouts = async ({ id }) => {
+    dispatch({ type: GET_WORKOUTS_BEGIN });
+    try {
+      const { data } = await authFetch.get(`/workout/${id}`);
+      dispatch({ type: GET_WORKOUTS_SUCCESS, payload: data.workouts });
+    } catch (error) {
+      dispatch({
+        type: GET_WORKOUTS_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+      console.log(error);
+    }
+  };
+
+  const addWorkout = async ({ date, muscleId }) => {
+    dispatch({ type: ADD_WORKOUT_BEGIN });
+    try {
+      await authFetch.post(`/workout`, { date, muscleId });
+      dispatch({ type: ADD_WORKOUT_SUCCESS });
+      await getWorkouts({ id: muscleId });
+    } catch (error) {
+      dispatch({
+        type: ADD_WORKOUT_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+      console.log(error);
+    }
+  };
+
+  const getExercises = async ({ date, muscleId }) => {
+    console.log(date, muscleId);
+    dispatch({ type: GET_EXERCISES_BEGIN });
+    try {
+      const { data } = await authFetch.get(`/exercise/${date}/${muscleId}`);
+      dispatch({ type: GET_EXERCISES_SUCCESS, payload: data.exercises });
+      console.log(data);
+      console.log(data.exercises);
+    } catch (error) {
+      dispatch({
+        type: GET_EXERCISES_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+      console.log(error);
+    }
+  };
+
+  const addSet = async ({ data, date, muscleId }) => {
+    dispatch({ type: ADD_SET_BEGIN });
+    try {
+      await authFetch.post(`/exercise`, data);
+      dispatch({ type: ADD_SET_SUCCESS });
+      await getExercises({ date, muscleId });
+    } catch (error) {
+      dispatch({
+        type: ADD_SET_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getCurrentUser();
   }, []);
 
   return (
     <AppContext.Provider
-      value={{ ...state, displayAlert, setupUser, logoutUser, getMuscles }}
+      value={{
+        ...state,
+        displayAlert,
+        setupUser,
+        logoutUser,
+        getMuscles,
+        getWorkouts,
+        addWorkout,
+        getExercises,
+        addSet,
+      }}
     >
       {children}
     </AppContext.Provider>

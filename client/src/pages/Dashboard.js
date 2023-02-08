@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import bicepsImg from "../assets/images/muscles/biceps.svg";
 import { useAppContext } from "../context/appContext";
 import Wrapper from "../assets/wrappers/Dashboard";

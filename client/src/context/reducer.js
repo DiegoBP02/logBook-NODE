@@ -10,6 +10,18 @@ import {
   GET_MUSCLES_BEGIN,
   GET_MUSCLES_SUCCESS,
   GET_MUSCLES_ERROR,
+  GET_WORKOUTS_BEGIN,
+  GET_WORKOUTS_SUCCESS,
+  GET_WORKOUTS_ERROR,
+  ADD_WORKOUT_BEGIN,
+  ADD_WORKOUT_SUCCESS,
+  ADD_WORKOUT_ERROR,
+  GET_EXERCISES_BEGIN,
+  GET_EXERCISES_SUCCESS,
+  GET_EXERCISES_ERROR,
+  ADD_SET_BEGIN,
+  ADD_SET_SUCCESS,
+  ADD_SET_ERROR,
 } from "./actions";
 import { initialState } from "./appContext";
 
@@ -89,6 +101,92 @@ const reducer = (state, action) => {
       muscles: action.payload,
     };
   }
+  if (action.type === GET_MUSCLES_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+  if (action.type === GET_WORKOUTS_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    };
+  }
+  if (action.type === GET_WORKOUTS_SUCCESS) {
+    return { ...state, isLoading: false, workouts: action.payload };
+  }
+  if (action.type === GET_WORKOUTS_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+  if (action.type === ADD_WORKOUT_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    };
+  }
+  if (action.type === ADD_WORKOUT_SUCCESS) {
+    return { ...state, isLoading: false };
+  }
+  if (action.type === ADD_WORKOUT_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+  if (action.type === GET_EXERCISES_BEGIN) {
+    return {
+      ...state,
+      exerciseLoading: true,
+    };
+  }
+  if (action.type === GET_EXERCISES_SUCCESS) {
+    return {
+      ...state,
+      exerciseLoading: false,
+      sets: action.payload,
+    };
+  }
+  if (action.type === GET_EXERCISES_ERROR) {
+    return {
+      ...state,
+      exerciseLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+  if (action.type === ADD_SET_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    };
+  }
+  if (action.type === ADD_SET_SUCCESS) {
+    return { ...state, isLoading: false };
+  }
+  if (action.type === ADD_SET_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+
   throw new Error(`no such action: ${action.type}`);
 };
 

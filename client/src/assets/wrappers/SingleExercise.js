@@ -13,6 +13,7 @@ const Wrapper = styled.div`
     padding: 0.5rem 0.625rem;
     background-color: #e0e0e0;
     position: relative;
+    margin-bottom: 5rem;
   }
   .formWrapper {
     display: flex;
@@ -23,7 +24,17 @@ const Wrapper = styled.div`
   }
   .removeBtn {
     position: absolute;
-    bottom: -3rem;
+    bottom: -2rem;
+  }
+  .properties {
+    display: grid;
+    place-items: center;
+    margin: 0 auto;
+    grid-template-columns: 1fr 3fr 1fr 1fr 1fr;
+    border-bottom: 1px solid #d0d0d0;
+  }
+  .properties p {
+    margin: 0;
   }
 `;
 

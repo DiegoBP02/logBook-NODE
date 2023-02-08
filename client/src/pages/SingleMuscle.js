@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Navbar, Modal, Workouts } from "../components";
+import { Navbar, Modal, Workouts, Loading } from "../components";
 import { AddWorkout } from "../components";
 import Wrapper from "../assets/wrappers/SingleMuscle";
+import { useAppContext } from "../context/appContext";
 
 const SingleMuscle = () => {
-  const [workouts, setWorkouts] = useState([]);
+  const { getWorkouts, workouts, isLoading, addWorkout } = useAppContext();
   const [showModal, setShowModal] = useState(false);
   const [date, setDate] = useState("");
   const { id } = useParams();
@@ -41,31 +42,21 @@ const SingleMuscle = () => {
     e.preventDefault();
 
     handleClick();
-    addWorkout();
-  };
-
-  const addWorkout = async () => {
-    try {
-      await axios.post(`/api/v1/workout`, { date, muscleId: id });
-      setDate("");
-      getWorkouts();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getWorkouts = async () => {
-    try {
-      const { data } = await axios.get(`/api/v1/workout/${id}`);
-      setWorkouts(data.workouts);
-    } catch (error) {
-      console.log(error);
-    }
+    addWorkout({ date, muscleId: id });
+    setDate("");
   };
 
   useEffect(() => {
-    getWorkouts();
+    getWorkouts({ id });
   }, []);
+
+  if (isLoading)
+    return (
+      <>
+        <Navbar />
+        <Loading />
+      </>
+    );
 
   return (
     <>

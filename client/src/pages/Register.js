@@ -94,7 +94,11 @@ function Register() {
         </button>
         <p>
           {values.isMember ? "Not a member yet?" : "Already a member?"}
-          <button type="button" className="member-btn" onClick={toggleMember}>
+          <button
+            type="button"
+            className="member-btn mt"
+            onClick={toggleMember}
+          >
             {values.isMember ? "Register" : "Login"}
           </button>
         </p>

@@ -19,6 +19,7 @@ const Wrapper = styled.div`
     cursor: pointer;
     text-decoration: none;
     position: relative;
+    background-color: #d0d0d0;
   }
   .addWorkout {
     background-color: #888888;

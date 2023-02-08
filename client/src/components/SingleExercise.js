@@ -2,9 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Wrapper from "../assets/wrappers/SingleExercise";
+import { useAppContext } from "../context/appContext";
 import FormRow from "./FormRow";
 import Navbar from "./Navbar";
 import SingleExerciseForm from "./SingleExerciseForm";
+import { Loading } from "../components";
 
 const initialState = {
   exercise: "",
@@ -14,9 +16,10 @@ const initialState = {
 };
 
 const Exercises = () => {
-  const [sets, setSets] = useState([]);
   const [values, setValues] = useState(initialState);
   const { date, muscleId, workoutId } = useParams();
+  const { getExercises, sets, addSet, isLoading, exerciseLoading } =
+    useAppContext();
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -30,67 +33,77 @@ const Exercises = () => {
     }
   };
 
-  const getExercises = async () => {
-    try {
-      const { data } = await axios.get(`/api/v1/exercise/${date}/${muscleId}`);
-      const res = data.exercises;
-      setSets(res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const addSet = async () => {
-    try {
-      const setData = {
-        date,
-        muscleId,
-        exercise: values.exercise,
-        sets: [
-          {
-            reps: values.reps,
-            weight: values.weight,
-            rir: values.rir,
-          },
-        ],
-      };
-      await axios.post(`/api/v1/exercise`, setData);
-      getExercises();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    addSet();
+
+    const data = {
+      date,
+      muscleId,
+      exercise: values.exercise,
+      sets: [
+        {
+          reps: values.reps,
+          weight: values.weight,
+          rir: values.rir,
+        },
+      ],
+    };
+
+    addSet({ data, date, muscleId });
   };
 
   useEffect(() => {
-    getExercises();
+    getExercises({ date, muscleId });
   }, []);
+
+  if (exerciseLoading)
+    return (
+      <>
+        <Navbar />
+        <Loading />
+      </>
+    );
 
   return (
     <Wrapper>
       <Navbar />
       {sets.length === 0 ? (
-        <h4>No jobs to display ...</h4>
+        <h5>No sets to display...</h5>
       ) : (
-        sets &&
-        sets.length > 0 &&
-        sets.map((set, exerciseIndex) => {
-          return (
-            <div key={exerciseIndex}>
-              {set.sets.map((exerciseProperty, setIndex) => (
-                <div key={setIndex}>
-                  {exerciseIndex + 1}: {set.exercise} : {exerciseProperty.reps}{" "}
-                  reps, {exerciseProperty.weight}
-                  kg, RIR:{exerciseProperty.rir}
+        <>
+          <article
+            className="properties marginBottom"
+            style={{ paddingBottom: "1rem" }}
+          >
+            <p>Set</p>
+            <p>Exercise name</p>
+            <p>Reps</p>
+            <p>Weight</p>
+            <p>RIR</p>
+          </article>
+          {sets &&
+            sets.length > 0 &&
+            sets.map((set, exerciseIndex) => {
+              return (
+                <div key={exerciseIndex}>
+                  {set.sets.map((exerciseProperty, setIndex) => (
+                    <div key={setIndex} className="properties">
+                      <p>{exerciseIndex + 1}</p>
+                      <p>{set.exercise}</p>
+                      <p>{exerciseProperty.reps}</p>
+                      <p>{exerciseProperty.weight}</p>
+                      <p>{exerciseProperty.rir}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          );
-        })
+              );
+            })}
+          {isLoading && (
+            <h5 style={{ textAlign: "center", marginTop: "0.5rem" }}>
+              Loading...
+            </h5>
+          )}
+        </>
       )}
       <SingleExerciseForm
         handleChange={handleChange}
