@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
+import { Link, useParams } from "react-router-dom";
+import Wrapper from "../assets/wrappers/SingleExercise";
 import FormRow from "./FormRow";
 import Navbar from "./Navbar";
+import SingleExerciseForm from "./SingleExerciseForm";
 
 const initialState = {
   exercise: "",
@@ -15,10 +16,18 @@ const initialState = {
 const Exercises = () => {
   const [sets, setSets] = useState([]);
   const [values, setValues] = useState(initialState);
-  const { date, muscleId } = useParams();
+  const { date, muscleId, workoutId } = useParams();
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const handleRemove = async () => {
+    try {
+      await axios.delete(`/api/v1/workout/${workoutId}/${muscleId}/${date}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getExercises = async () => {
@@ -61,61 +70,13 @@ const Exercises = () => {
     getExercises();
   }, []);
 
-  if (sets.length === 0) {
-    return (
-      <>
-        <Navbar />
-        <Wrapper>
-          <h5>No sets to display...</h5>
-          <form onSubmit={handleSubmit}>
-            <div className="form">
-              <div className="formWrapper">
-                <FormRow
-                  type="text"
-                  name="exercise"
-                  value={values.exercise}
-                  handleChange={handleChange}
-                  labelText="exercise"
-                />
-                <FormRow
-                  type="number"
-                  name="reps"
-                  value={values.reps}
-                  handleChange={handleChange}
-                  labelText="reps"
-                  min="1"
-                />
-                <FormRow
-                  type="number"
-                  name="weight"
-                  value={values.weight}
-                  handleChange={handleChange}
-                  labelText="weight"
-                  min="1"
-                />
-                <FormRow
-                  type="number"
-                  labelText="rir"
-                  name="rir"
-                  value={values.rir}
-                  handleChange={handleChange}
-                  min="0"
-                />
-              </div>
-              <button type="submit" className="btn">
-                Add Exercise
-              </button>
-            </div>
-          </form>
-        </Wrapper>
-      </>
-    );
-  }
-
   return (
     <Wrapper>
       <Navbar />
-      {sets &&
+      {sets.length === 0 ? (
+        <h4>No jobs to display ...</h4>
+      ) : (
+        sets &&
         sets.length > 0 &&
         sets.map((set, exerciseIndex) => {
           return (
@@ -129,70 +90,17 @@ const Exercises = () => {
               ))}
             </div>
           );
-        })}
-      <form onSubmit={handleSubmit}>
-        <div className="form">
-          <div className="formWrapper">
-            <FormRow
-              type="text"
-              name="exercise"
-              value={values.exercise}
-              handleChange={handleChange}
-              labelText="exercise"
-            />
-            <FormRow
-              type="number"
-              name="reps"
-              value={values.reps}
-              handleChange={handleChange}
-              labelText="reps"
-              min="1"
-            />
-            <FormRow
-              type="number"
-              name="weight"
-              value={values.weight}
-              handleChange={handleChange}
-              labelText="weight"
-              min="1"
-            />
-            <FormRow
-              type="number"
-              labelText="rir"
-              name="rir"
-              value={values.rir}
-              handleChange={handleChange}
-              min="0"
-            />
-          </div>
-          <button type="submit" className="btn">
-            Add Exercise
-          </button>
-        </div>
-      </form>
+        })
+      )}
+      <SingleExerciseForm
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        values={values}
+        muscleId={muscleId}
+        handleRemove={handleRemove}
+      />
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div`
-  width: var(--fluid-width);
-  max-width: var(--max-width);
-  margin: 0 auto;
-  .form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 0.5rem 0.625rem;
-    background-color: #e0e0e0;
-  }
-  .formWrapper {
-    display: flex;
-    gap: 1rem;
-  }
-  .btn {
-    width: fit-content;
-  }
-`;
 export default Exercises;

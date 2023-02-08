@@ -1,5 +1,6 @@
 const Workout = require("../models/Workout");
 const Muscle = require("../models/Muscle");
+const Exercise = require("../models/Exercise");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 
@@ -36,4 +37,28 @@ const getAllWorkouts = async (req, res) => {
   res.status(StatusCodes.OK).json({ workouts, count: workouts.length });
 };
 
-module.exports = { createWorkout, getAllWorkouts };
+const deleteWorkout = async (req, res) => {
+  const { workoutId } = req.params;
+  const { muscleId } = req.params;
+  const { date } = req.params;
+
+  const workout = await Workout.findOne({ _id: workoutId });
+  const exercises = await Exercise.find({ muscleId, date });
+
+  if (!workout) {
+    throw new CustomError.BadRequestError(
+      `No workout found with ${workoutId} id!`
+    );
+  }
+
+  await workout.remove();
+  exercises.forEach(async (exercise) => {
+    await exercise.remove();
+  });
+
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: "Successful! Workout and exercises removed!" });
+};
+
+module.exports = { createWorkout, getAllWorkouts, deleteWorkout };

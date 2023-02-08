@@ -30,7 +30,7 @@ function App() {
           }
         />
         <Route
-          path="/singleExercise/:date/:muscleId"
+          path="/singleExercise/:date/:muscleId/:workoutId"
           element={
             <ProtectedRoute>
               <SingleExercise />
