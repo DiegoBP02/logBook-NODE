@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { SingleExercise } from "./components";
 import {
   Landing,
   Register,
@@ -7,6 +6,7 @@ import {
   SharedLayout,
   ProtectedRoute,
   SingleMuscle,
+  SingleExercise,
 } from "./pages";
 
 function App() {

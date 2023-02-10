@@ -1,12 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Wrapper from "../assets/wrappers/SingleExercise";
 import { useAppContext } from "../context/appContext";
-import FormRow from "./FormRow";
-import Navbar from "./Navbar";
-import SingleExerciseForm from "./SingleExerciseForm";
-import { Loading } from "../components";
+import { Navbar, SingleExerciseForm, Loading } from "../components";
 
 const initialState = {
   exercise: "",
@@ -18,19 +14,16 @@ const initialState = {
 const Exercises = () => {
   const [values, setValues] = useState(initialState);
   const { date, muscleId, workoutId } = useParams();
-  const { getExercises, sets, addSet, isLoading, exerciseLoading } =
+  const { getExercises, sets, addSet, isLoading, handleRemove, getWorkouts } =
     useAppContext();
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  const handleRemove = async () => {
-    try {
-      await axios.delete(`/api/v1/workout/${workoutId}/${muscleId}/${date}`);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleSetRemove = () => {
+    handleRemove({ workoutId, muscleId, date });
+    getWorkouts({ id: muscleId });
   };
 
   const handleSubmit = (e) => {
@@ -55,14 +48,6 @@ const Exercises = () => {
   useEffect(() => {
     getExercises({ date, muscleId });
   }, []);
-
-  if (exerciseLoading)
-    return (
-      <>
-        <Navbar />
-        <Loading />
-      </>
-    );
 
   return (
     <Wrapper>
@@ -110,7 +95,7 @@ const Exercises = () => {
         handleSubmit={handleSubmit}
         values={values}
         muscleId={muscleId}
-        handleRemove={handleRemove}
+        handleRemove={handleSetRemove}
       />
     </Wrapper>
   );

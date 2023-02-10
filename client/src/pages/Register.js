@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Logo, FormRow, Alert } from "../components";
 import Wrapper from "../assets/wrappers/Register";
 import { useAppContext } from "../context/appContext";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   name: "",
@@ -89,16 +89,12 @@ function Register() {
           handleChange={handleChange}
         />
 
-        <button type="submit" className="btn btn-block">
+        <button type="submit" className="btn btn-block mt">
           submit
         </button>
         <p>
           {values.isMember ? "Not a member yet?" : "Already a member?"}
-          <button
-            type="button"
-            className="member-btn mt"
-            onClick={toggleMember}
-          >
+          <button type="button" className="member-btn " onClick={toggleMember}>
             {values.isMember ? "Register" : "Login"}
           </button>
         </p>

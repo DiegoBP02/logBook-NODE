@@ -1,3 +1,4 @@
+import SingleExercise from "./SingleExercise";
 import Dashboard from "./Dashboard";
 import Error from "./Error";
 import Landing from "./Landing";
@@ -14,4 +15,5 @@ export {
   ProtectedRoute,
   SharedLayout,
   SingleMuscle,
+  SingleExercise,
 };

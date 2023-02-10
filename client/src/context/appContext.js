@@ -23,6 +23,9 @@ import {
   ADD_SET_BEGIN,
   ADD_SET_SUCCESS,
   ADD_SET_ERROR,
+  REMOVE_SET_BEGIN,
+  REMOVE_SET_SUCCESS,
+  REMOVE_SET_ERROR,
 } from "./actions";
 import reducer from "./reducer";
 import axios from "axios";
@@ -37,7 +40,6 @@ export const initialState = {
   userLoading: false,
   workouts: [],
   sets: [],
-  exerciseLoading: false,
 };
 
 const AppContext = React.createContext();
@@ -160,13 +162,10 @@ const AppProvider = ({ children }) => {
   };
 
   const getExercises = async ({ date, muscleId }) => {
-    console.log(date, muscleId);
     dispatch({ type: GET_EXERCISES_BEGIN });
     try {
       const { data } = await authFetch.get(`/exercise/${date}/${muscleId}`);
       dispatch({ type: GET_EXERCISES_SUCCESS, payload: data.exercises });
-      console.log(data);
-      console.log(data.exercises);
     } catch (error) {
       dispatch({
         type: GET_EXERCISES_ERROR,
@@ -191,6 +190,14 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const handleRemove = async ({ workoutId, muscleId, date }) => {
+    try {
+      await authFetch.delete(`/workout/${workoutId}/${muscleId}/${date}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getCurrentUser();
   }, []);
@@ -207,6 +214,7 @@ const AppProvider = ({ children }) => {
         addWorkout,
         getExercises,
         addSet,
+        handleRemove,
       }}
     >
       {children}

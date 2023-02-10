@@ -18,8 +18,8 @@ const Wrapper = styled.section`
     height: 4rem;
     margin-bottom: 2rem;
   }
-  mt {
-    margin-top: 2rem;
+  .mt {
+    margin-top: 1.5rem;
   }
 `;
 

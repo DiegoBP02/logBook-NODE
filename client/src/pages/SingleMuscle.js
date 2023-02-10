@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Navbar, Modal, Workouts, Loading } from "../components";
 import { AddWorkout } from "../components";
@@ -15,16 +14,15 @@ const SingleMuscle = () => {
 
   const handleSelect = () => {
     const date = new Date();
-    const formattedDate = date.toLocaleDateString("en-US", {
+    const formattedDate = date.toLocaleDateString("pt-br", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
-      timeZone: "UTC",
       formatMatcher: "basic",
     });
 
     const [day, month, year] = formattedDate.split("/");
-    const transformedDate = [year, day, month].join("-");
+    const transformedDate = [year, month, day].join("-");
 
     setSelected(!selected);
     setDate(transformedDate);

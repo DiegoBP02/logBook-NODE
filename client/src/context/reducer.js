@@ -149,20 +149,20 @@ const reducer = (state, action) => {
   if (action.type === GET_EXERCISES_BEGIN) {
     return {
       ...state,
-      exerciseLoading: true,
+      isLoading: true,
     };
   }
   if (action.type === GET_EXERCISES_SUCCESS) {
     return {
       ...state,
-      exerciseLoading: false,
+      isLoading: false,
       sets: action.payload,
     };
   }
   if (action.type === GET_EXERCISES_ERROR) {
     return {
       ...state,
-      exerciseLoading: false,
+      isLoading: false,
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,

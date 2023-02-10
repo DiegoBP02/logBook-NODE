@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import Exercises from "./SingleExercise";
+import Exercises from "../pages/SingleExercise";
 
 const SingleDate = () => {
   const createdAt = new Date().toISOString();
