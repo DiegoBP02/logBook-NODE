@@ -28,7 +28,9 @@ const workoutRouter = require("./routes/workoutRoutes");
 app.use(cors());
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
-app.use(morgan("dev"));
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(express.json());
 app.use(helmet());
