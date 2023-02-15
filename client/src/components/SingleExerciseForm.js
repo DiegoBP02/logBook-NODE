@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useAppContext } from "../context/appContext";
 import FormRow from "./FormRow";
 
 const SingleExerciseForm = ({
@@ -8,6 +9,7 @@ const SingleExerciseForm = ({
   muscleId,
   handleRemove,
 }) => {
+  const { language } = useAppContext();
   return (
     <form onSubmit={handleSubmit}>
       <div className="form">
@@ -17,14 +19,14 @@ const SingleExerciseForm = ({
             name="exercise"
             value={values.exercise}
             handleChange={handleChange}
-            labelText="exercise"
+            labelText={language === "en" ? "exercise" : "exercício"}
           />
           <FormRow
             type="number"
             name="reps"
             value={values.reps}
             handleChange={handleChange}
-            labelText="reps"
+            labelText={language === "en" ? "reps" : "repetições"}
             min="1"
           />
           <FormRow
@@ -32,12 +34,13 @@ const SingleExerciseForm = ({
             name="weight"
             value={values.weight}
             handleChange={handleChange}
-            labelText="weight"
+            labelText={language === "en" ? "weight" : "peso"}
             min="1"
+            step=".01"
           />
           <FormRow
             type="number"
-            labelText="rir"
+            labelText="RIR"
             name="rir"
             value={values.rir}
             handleChange={handleChange}
@@ -45,7 +48,7 @@ const SingleExerciseForm = ({
           />
         </div>
         <button type="submit" className="btn">
-          Add Exercise
+          {language === "en" ? "Add Set" : "Adicionar série"}
         </button>
         <Link
           to={`/singleMuscle/${muscleId}`}
@@ -53,7 +56,7 @@ const SingleExerciseForm = ({
           onClick={handleRemove}
           className="removeBtn"
         >
-          Remove Workout
+          {language === "en" ? "Remove workout" : "Remover treino"}
         </Link>
       </div>
     </form>

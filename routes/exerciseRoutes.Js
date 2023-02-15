@@ -4,7 +4,7 @@ const {
   createExercise,
   getAllExercises,
   getExercisesByData,
-  createWorkout,
+  deleteExercise,
 } = require("../controllers/exerciseController");
 
 const { authenticateUser } = require("../middleware/authentication");
@@ -13,6 +13,7 @@ router
   .route("/")
   .post(authenticateUser, createExercise)
   .get(authenticateUser, getAllExercises);
+router.route("/:exerciseId").delete(authenticateUser, deleteExercise);
 router.route("/:date/:muscleId").get(authenticateUser, getExercisesByData);
 
 module.exports = router;

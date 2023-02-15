@@ -6,6 +6,7 @@ const FormRow = ({
   labelText,
   noLabel,
   min,
+  step,
 }) => {
   return (
     <div className="form-row">
@@ -22,6 +23,7 @@ const FormRow = ({
         onChange={handleChange}
         className="form-input"
         min={min ? min : null}
+        step={step ? step : null}
       />
     </div>
   );

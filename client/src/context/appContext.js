@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useContext } from "react";
+import React, { useEffect, useReducer, useContext, useState } from "react";
 import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
@@ -23,9 +23,6 @@ import {
   ADD_SET_BEGIN,
   ADD_SET_SUCCESS,
   ADD_SET_ERROR,
-  REMOVE_SET_BEGIN,
-  REMOVE_SET_SUCCESS,
-  REMOVE_SET_ERROR,
 } from "./actions";
 import reducer from "./reducer";
 import axios from "axios";
@@ -45,6 +42,7 @@ export const initialState = {
 const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [language, setLanguage] = useState("en");
 
   const authFetch = axios.create({
     baseURL: "/api/v1",
@@ -57,7 +55,7 @@ const AppProvider = ({ children }) => {
     (error) => {
       if (error.response.status === 401) {
         console.log("Unauthorized error!");
-        // logoutUser();
+        logoutUser();
       }
       return Promise.reject(error);
     }
@@ -68,6 +66,7 @@ const AppProvider = ({ children }) => {
     try {
       const response = await authFetch.post(`/auth/${endPoint}`, currentUser);
       const { user } = response.data;
+      console.log(user);
       dispatch({
         type: SETUP_USER_SUCCESS,
         payload: {
@@ -76,7 +75,6 @@ const AppProvider = ({ children }) => {
         },
       });
     } catch (error) {
-      console.log(error.response);
       dispatch({
         type: SETUP_USER_ERROR,
         payload: { msg: error.response.data.msg },
@@ -90,7 +88,6 @@ const AppProvider = ({ children }) => {
     try {
       const { data } = await authFetch("/auth/getCurrentUser");
       const { user } = data;
-
       dispatch({ type: GET_CURRENT_USER_SUCCESS, payload: { user } });
     } catch (error) {
       if (error.response.status === 401) return;
@@ -198,6 +195,10 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const handleLanguageSwitch = () => {
+    setLanguage(language === "en" ? "pt" : "en");
+  };
+
   useEffect(() => {
     getCurrentUser();
   }, []);
@@ -215,6 +216,9 @@ const AppProvider = ({ children }) => {
         getExercises,
         addSet,
         handleRemove,
+        authFetch,
+        handleLanguageSwitch,
+        language,
       }}
     >
       {children}

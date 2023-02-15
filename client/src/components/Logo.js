@@ -15,7 +15,7 @@ const Logo = ({ center, noMargin, widthFix }) => {
   return (
     <Link className={className} to="/">
       <img src={logo} alt="logo image" />
-      <h2>Todo List</h2>
+      <h2>Log Book</h2>
     </Link>
   );
 };

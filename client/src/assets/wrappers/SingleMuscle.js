@@ -22,7 +22,7 @@ const Wrapper = styled.div`
     background-color: #d0d0d0;
   }
   .addWorkout {
-    background-color: #888888;
+    background-color: #999999;
     border: 3px solid #000000;
   }
   .addWorkout b {

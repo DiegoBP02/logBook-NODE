@@ -1,7 +1,16 @@
-import moment from "moment-timezone";
+import moment from "moment";
+import "moment/locale/pt";
 import { Link } from "react-router-dom";
+import { useAppContext } from "../context/appContext";
 
 const Workouts = ({ workouts, id }) => {
+  const { language } = useAppContext();
+
+  if (language === "pt") {
+    moment.locale("pt");
+  } else {
+    moment.locale("en");
+  }
   return workouts?.map((workoutProperty, index) => {
     const workoutPropertyDate = workoutProperty.date;
     const momentObject = moment.utc(workoutPropertyDate);

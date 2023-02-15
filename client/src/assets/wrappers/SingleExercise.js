@@ -30,7 +30,7 @@ const Wrapper = styled.div`
     display: grid;
     place-items: center;
     margin: 0 auto;
-    grid-template-columns: 1fr 3fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 3fr 1fr 1fr 1fr 50px;
     border-bottom: 1px solid #d0d0d0;
   }
   .properties p {

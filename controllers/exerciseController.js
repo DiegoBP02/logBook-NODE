@@ -38,12 +38,14 @@ const getSingleMuscleExercises = async (req, res) => {
 const getExercisesByData = async (req, res) => {
   const muscleId = req.params.muscleId;
   const date = req.params.date;
+  const userId = req.user.userId;
 
   const muscleName = (await Muscle.findOne({ _id: muscleId })).name;
 
   const exercises = await Exercise.find({
     date,
     muscle: muscleName,
+    user: { _id: userId },
   });
 
   if (!exercises) {
@@ -52,7 +54,23 @@ const getExercisesByData = async (req, res) => {
     );
   }
 
-  res.status(StatusCodes.OK).json({ exercises, muscleId });
+  res
+    .status(StatusCodes.OK)
+    .json({ exercises, muscleId, count: exercises.length });
+};
+
+const deleteExercise = async (req, res) => {
+  const exerciseId = req.params.exerciseId;
+
+  const exercise = await Exercise.findOne({ _id: exerciseId });
+  if (!exercise) {
+    throw new CustomError.BadRequestError(
+      `There is no exercise with ${exerciseId} id`
+    );
+  }
+
+  await exercise.remove();
+  res.status(StatusCodes.OK).json({ msg: "Successful! Exercise removed!" });
 };
 
 module.exports = {
@@ -60,4 +78,5 @@ module.exports = {
   getAllExercises,
   getSingleMuscleExercises,
   getExercisesByData,
+  deleteExercise,
 };

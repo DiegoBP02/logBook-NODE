@@ -1,4 +1,5 @@
 import Wrapper from "../assets/wrappers/Modal";
+import { useAppContext } from "../context/appContext";
 
 const Modal = ({
   handleSubmit,
@@ -7,11 +8,12 @@ const Modal = ({
   selected,
   handleSelect,
 }) => {
+  const { language } = useAppContext();
   return (
     <Wrapper>
       <form onSubmit={handleSubmit}>
         <div className="formWrapper">
-          <h5>Add New Workout</h5>
+          <h5>{language === "en" ? "Add New Workout" : "Adicionar treino"}</h5>
           <button
             type="button"
             onClick={handleClick}
@@ -35,11 +37,13 @@ const Modal = ({
               checked={selected}
               onChange={handleSelect}
             />
-            <label htmlFor="currentDate">Current Date</label>
+            <label htmlFor="currentDate">
+              {language === "en" ? "Current Date" : "Data Atual"}
+            </label>
           </div>
 
           <button type="submit" className="btn">
-            Submit
+            {language === "en" ? "Submit" : "Enviar"}
           </button>
         </div>
       </form>

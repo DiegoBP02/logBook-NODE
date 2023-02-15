@@ -9,6 +9,9 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const bp = require("body-parser");
+const helmet = require("helmet");
+const xss = require("xss-clean");
+const mongoSanitize = require("express-mongo-sanitize");
 
 const connectDB = require("./db/connectDB");
 
@@ -28,6 +31,9 @@ app.use(bp.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(express.json());
+app.use(helmet());
+app.use(xss());
+app.use(mongoSanitize());
 
 app.get("/api/v1", (req, res) => {
   res.send("Working!");

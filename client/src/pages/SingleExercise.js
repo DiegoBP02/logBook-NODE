@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Wrapper from "../assets/wrappers/SingleExercise";
 import { useAppContext } from "../context/appContext";
 import { Navbar, SingleExerciseForm, Loading } from "../components";
@@ -13,9 +13,18 @@ const initialState = {
 
 const Exercises = () => {
   const [values, setValues] = useState(initialState);
+  const [loading, setLoading] = useState(true);
   const { date, muscleId, workoutId } = useParams();
-  const { getExercises, sets, addSet, isLoading, handleRemove, getWorkouts } =
-    useAppContext();
+  const {
+    getExercises,
+    sets,
+    addSet,
+    isLoading,
+    handleRemove,
+    getWorkouts,
+    authFetch,
+    language,
+  } = useAppContext();
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -45,25 +54,55 @@ const Exercises = () => {
     addSet({ data, date, muscleId });
   };
 
+  const handleExerciseRemove = async (id) => {
+    try {
+      await authFetch.delete(`/exercise/${id}`);
+      getExercises({ date, muscleId });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    getExercises({ date, muscleId });
+    async function fetchData() {
+      await getExercises({ date, muscleId });
+      setLoading(false);
+    }
+
+    fetchData();
   }, []);
+
+  if (loading) {
+    return (
+      <Wrapper>
+        <Navbar />
+        <Loading />
+      </Wrapper>
+    );
+  }
 
   return (
     <Wrapper>
       <Navbar />
+      <Link to="/" className="btn" style={{ margin: "0.5rem 0 1.5rem 0" }}>
+        {language === "en" ? "Back Home" : "Voltar ao menu principal"}
+      </Link>
       {sets.length === 0 ? (
-        <h5>No sets to display...</h5>
+        <h5>
+          {language === "en"
+            ? "No sets to display..."
+            : "Nenhuma série adicionada..."}
+        </h5>
       ) : (
         <>
           <article
             className="properties marginBottom"
             style={{ paddingBottom: "1rem" }}
           >
-            <p>Set</p>
-            <p>Exercise name</p>
-            <p>Reps</p>
-            <p>Weight</p>
+            <p>{language === "en" ? "Set" : "Série"}</p>
+            <p>{language === "en" ? "Exercise" : "Exercício"}</p>
+            <p>{language === "en" ? "Reps" : "Repetições"}</p>
+            <p>{language === "en" ? "Weight" : "Peso"}</p>
             <p>RIR</p>
           </article>
           {sets &&
@@ -78,6 +117,12 @@ const Exercises = () => {
                       <p>{exerciseProperty.reps}</p>
                       <p>{exerciseProperty.weight}</p>
                       <p>{exerciseProperty.rir}</p>
+                      <p
+                        style={{ color: "red", cursor: "pointer" }}
+                        onClick={() => handleExerciseRemove(set._id)}
+                      >
+                        X
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -85,7 +130,7 @@ const Exercises = () => {
             })}
           {isLoading && (
             <h5 style={{ textAlign: "center", marginTop: "0.5rem" }}>
-              Loading...
+              {language === "en" ? "Loading..." : "Carregando"}
             </h5>
           )}
         </>
