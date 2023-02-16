@@ -12,7 +12,7 @@ const bp = require("body-parser");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const mongoSanitize = require("express-mongo-sanitize");
-
+const path = require("path");
 const connectDB = require("./db/connectDB");
 
 // middlewares
@@ -25,20 +25,23 @@ const muscleRouter = require("./routes/muscleRoutes");
 const exerciseRouter = require("./routes/exerciseRoutes");
 const workoutRouter = require("./routes/workoutRoutes");
 
-app.use(cors());
-app.use(bp.json());
-app.use(bp.urlencoded({ extended: true }));
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
-app.use(cookieParser(process.env.JWT_SECRET));
+
+app.use(express.static(path.resolve(__dirname, "./client/build")));
+
+app.use(cors());
 app.use(express.json());
+app.use(bp.json());
+app.use(bp.urlencoded({ extended: true }));
+app.use(cookieParser(process.env.JWT_SECRET));
 app.use(helmet());
 app.use(xss());
 app.use(mongoSanitize());
 
-app.get("/api/v1", (req, res) => {
-  res.send("Working!");
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 });
 
 app.use("/api/v1/auth", authRouter);
