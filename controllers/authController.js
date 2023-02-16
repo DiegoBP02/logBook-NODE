@@ -1,7 +1,11 @@
-const User = require("../models/User");
-const { StatusCodes } = require("http-status-codes");
-const { attachCookiesToResponse, createTokenUser } = require("../utils");
-const CustomError = require("../errors");
+import User from "../models/User.js";
+import { attachCookiesToResponse, createTokenUser } from "../utils/index.js";
+import { StatusCodes } from "http-status-codes";
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthenticatedError,
+} from "../errors/index.js";
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -20,17 +24,17 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    throw new CustomError.BadRequestError("Please provide all values!");
+    throw new BadRequestError("Please provide all values!");
   }
 
   const user = await User.findOne({ email });
   if (!user) {
-    throw new CustomError.NotFoundError("Invalid Credentials!");
+    throw new NotFoundError("Invalid Credentials!");
   }
 
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
-    throw new CustomError.UnauthenticatedError("Invalid Credentials!");
+    throw new UnauthenticatedError("Invalid Credentials!");
   }
 
   const tokenUser = createTokenUser(user);
@@ -53,4 +57,4 @@ const getCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user });
 };
 
-module.exports = { register, login, logout, getCurrentUser };
+export { register, login, logout, getCurrentUser };

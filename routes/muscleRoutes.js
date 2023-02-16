@@ -1,19 +1,18 @@
-const router = require("express").Router();
+import { Router } from "express";
+const router = Router();
 
-const {
+import {
   createName,
   getAllMuscles,
   getSingleMuscle,
-} = require("../controllers/muscleController");
+} from "../controllers/muscleController.js";
 
-const {
-  getSingleMuscleExercises,
-} = require("../controllers/exerciseController");
+import { getSingleMuscleExercises } from "../controllers/exerciseController.js";
 
-const {
+import {
   authenticateUser,
   authorizePermissions,
-} = require("../middleware/authentication");
+} from "../middleware/authentication.js";
 
 router
   .route("/")
@@ -22,4 +21,4 @@ router
 router.route("/:id/exercises").get(getSingleMuscleExercises);
 router.route("/:id").get(getSingleMuscle);
 
-module.exports = router;
+export default router;

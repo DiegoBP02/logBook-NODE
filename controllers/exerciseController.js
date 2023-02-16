@@ -1,16 +1,14 @@
-const { StatusCodes } = require("http-status-codes");
-const Muscle = require("../models/Muscle");
-const CustomError = require("../errors");
-const Exercise = require("../models/Exercise");
+import Muscle from "../models/Muscle.js";
+import Exercise from "../models/Exercise.js";
+import { StatusCodes } from "http-status-codes";
+import BadRequestError from "../errors/bad-request.js";
 
 const createExercise = async (req, res) => {
   const { muscleId } = req.body;
 
   const muscle = await Muscle.findOne({ _id: muscleId });
   if (!muscle) {
-    throw new CustomError.BadRequestError(
-      `There is no ${muscleId} muscle category id!`
-    );
+    throw new BadRequestError(`There is no ${muscleId} muscle category id!`);
   }
 
   req.body.muscle = muscle.name;
@@ -49,7 +47,7 @@ const getExercisesByData = async (req, res) => {
   });
 
   if (!exercises) {
-    throw new CustomError.BadRequestError(
+    throw new BadRequestError(
       "There are no exercises created on the given date!"
     );
   }
@@ -64,16 +62,14 @@ const deleteExercise = async (req, res) => {
 
   const exercise = await Exercise.findOne({ _id: exerciseId });
   if (!exercise) {
-    throw new CustomError.BadRequestError(
-      `There is no exercise with ${exerciseId} id`
-    );
+    throw new BadRequestError(`There is no exercise with ${exerciseId} id`);
   }
 
   await exercise.remove();
   res.status(StatusCodes.OK).json({ msg: "Successful! Exercise removed!" });
 };
 
-module.exports = {
+export {
   createExercise,
   getAllExercises,
   getSingleMuscleExercises,

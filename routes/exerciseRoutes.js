@@ -1,13 +1,14 @@
-const router = require("express").Router();
+import { Router } from "express";
+const router = Router();
 
-const {
+import {
   createExercise,
   getAllExercises,
   getExercisesByData,
   deleteExercise,
-} = require("../controllers/exerciseController");
+} from "../controllers/exerciseController.js";
 
-const { authenticateUser } = require("../middleware/authentication");
+import { authenticateUser } from "../middleware/authentication.js";
 
 router
   .route("/")
@@ -16,4 +17,4 @@ router
 router.route("/:exerciseId").delete(authenticateUser, deleteExercise);
 router.route("/:date/:muscleId").get(authenticateUser, getExercisesByData);
 
-module.exports = router;
+export default router;

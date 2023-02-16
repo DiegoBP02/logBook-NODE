@@ -1,6 +1,6 @@
-const Muscle = require("../models/Muscle");
-const { StatusCodes } = require("http-status-codes");
-const CustomError = require("../errors");
+import Muscle from "../models/Muscle.js";
+import { StatusCodes } from "http-status-codes";
+import BadRequestError from "../errors/bad-request.js";
 
 const createName = async (req, res) => {
   const muscle = await Muscle.create(req.body);
@@ -16,10 +16,10 @@ const getSingleMuscle = async (req, res) => {
   const { id: muscleId } = req.params;
   const muscle = await Muscle.findOne({ _id: muscleId });
   if (!muscle) {
-    throw new CustomError.BadRequestError(`There is no muscle with ${id}!`);
+    throw new BadRequestError(`There is no muscle with ${id}!`);
   }
 
   res.status(StatusCodes.OK).json({ muscle });
 };
 
-module.exports = { createName, getAllMuscles, getSingleMuscle };
+export { createName, getAllMuscles, getSingleMuscle };

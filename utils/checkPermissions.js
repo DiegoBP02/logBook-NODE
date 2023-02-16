@@ -1,4 +1,4 @@
-const { UnauthorizedError } = require("../errors");
+import { UnauthorizedError } from "../errors";
 
 const checkPermissions = (requestUser, resourceUserId) => {
   if (requestUser.role === "admin") return;
@@ -6,4 +6,4 @@ const checkPermissions = (requestUser, resourceUserId) => {
   throw new UnauthorizedError("Unauthorized to access this route!");
 };
 
-module.exports = checkPermissions;
+export default checkPermissions;

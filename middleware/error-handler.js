@@ -1,5 +1,6 @@
-// const { CustomAPIError } = require("../errors");
-const { StatusCodes } = require("http-status-codes");
+// import { CustomAPIError } from "../errors";
+import { StatusCodes } from "http-status-codes";
+
 const errorHandlerMiddleware = (err, req, res, next) => {
   let customError = {
     // set default
@@ -31,4 +32,4 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   return res.status(customError.statusCode).json({ msg: customError.msg });
 };
 
-module.exports = errorHandlerMiddleware;
+export default errorHandlerMiddleware;

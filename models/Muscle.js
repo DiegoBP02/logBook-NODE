@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const MuscleSchema = new mongoose.Schema(
   {
@@ -16,5 +16,4 @@ MuscleSchema.virtual("exercise", {
   foreignField: "muscleId",
   justOne: false,
 });
-
-module.exports = mongoose.model("Muscle", MuscleSchema);
+export default mongoose.model("Muscle", MuscleSchema);

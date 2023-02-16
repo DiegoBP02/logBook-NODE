@@ -1,53 +1,58 @@
-require("dotenv").config();
-require("express-async-errors");
+import "express-async-errors";
+import dotenv from "dotenv";
+dotenv.config();
 
-const express = require("express");
+import express from "express";
 const app = express();
 
 // others packages
-const morgan = require("morgan");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-const bp = require("body-parser");
-const helmet = require("helmet");
-const xss = require("xss-clean");
-const mongoSanitize = require("express-mongo-sanitize");
-const path = require("path");
-const connectDB = require("./db/connectDB");
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import bp from "body-parser";
+import helmet from "helmet";
+import xss from "xss-clean";
+import mongoSanitize from "express-mongo-sanitize";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import path from "path";
+
+import connectDB from "./db/connectDB.js";
 
 // middlewares
-const notFoundMiddleware = require("./middleware/not-found");
-const errorHandlerMiddleware = require("./middleware/error-handler");
+import notFoundMiddleware from "./middleware/not-found.js";
+import errorHandlerMiddleware from "./middleware/error-handler.js";
 
 // routers
-const authRouter = require("./routes/authRoutes");
-const muscleRouter = require("./routes/muscleRoutes");
-const exerciseRouter = require("./routes/exerciseRoutes");
-const workoutRouter = require("./routes/workoutRoutes");
+import authRouter from "./routes/authRoutes.js";
+import muscleRouter from "./routes/muscleRoutes.js";
+import exerciseRouter from "./routes/exerciseRoutes.js";
+import workoutRouter from "./routes/workoutRoutes.js";
 
-if (process.env.NODE_ENV !== "production") {
-  app.use(morgan("dev"));
-}
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use(express.static(path.resolve(__dirname, "./client/build")));
 
 app.use(cors());
-app.use(express.json());
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
 app.use(cookieParser(process.env.JWT_SECRET));
+app.use(express.json());
 app.use(helmet());
 app.use(xss());
 app.use(mongoSanitize());
-
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
-});
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/muscle", muscleRouter);
 app.use("/api/v1/exercise", exerciseRouter);
 app.use("/api/v1/workout", workoutRouter);
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
+});
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

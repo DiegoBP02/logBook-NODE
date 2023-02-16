@@ -1,17 +1,15 @@
-const Workout = require("../models/Workout");
-const Muscle = require("../models/Muscle");
-const Exercise = require("../models/Exercise");
-const { StatusCodes } = require("http-status-codes");
-const CustomError = require("../errors");
+import Workout from "../models/Workout.js";
+import Muscle from "../models/Muscle.js";
+import Exercise from "../models/Exercise.js";
+import { StatusCodes } from "http-status-codes";
+import BadRequestError from "../errors/bad-request.js";
 
 const createWorkout = async (req, res) => {
   const { muscleId } = req.body;
 
   const isMuscleValid = await Muscle.findOne({ _id: muscleId });
   if (!isMuscleValid) {
-    throw new CustomError.BadRequestError(
-      `There is no muscle with ${muscleId} id!`
-    );
+    throw new BadRequestError(`There is no muscle with ${muscleId} id!`);
   }
 
   req.body.muscleId = isMuscleValid._id;
@@ -29,7 +27,7 @@ const getAllWorkouts = async (req, res) => {
 
   const workouts = await Workout.find({ userId, muscleId });
   if (!workouts) {
-    throw new CustomError.BadRequestError(
+    throw new BadRequestError(
       `Something went wrong! Please check the if the values are correct!`
     );
   }
@@ -46,9 +44,7 @@ const deleteWorkout = async (req, res) => {
   const exercises = await Exercise.find({ muscleId, date });
 
   if (!workout) {
-    throw new CustomError.BadRequestError(
-      `No workout found with ${workoutId} id!`
-    );
+    throw new BadRequestError(`No workout found with ${workoutId} id!`);
   }
 
   await workout.remove();
@@ -61,4 +57,4 @@ const deleteWorkout = async (req, res) => {
     .json({ msg: "Successful! Workout and exercises removed!" });
 };
 
-module.exports = { createWorkout, getAllWorkouts, deleteWorkout };
+export { createWorkout, getAllWorkouts, deleteWorkout };

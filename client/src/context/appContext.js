@@ -66,7 +66,6 @@ const AppProvider = ({ children }) => {
     try {
       const response = await authFetch.post(`/auth/${endPoint}`, currentUser);
       const { user } = response.data;
-      console.log(user);
       dispatch({
         type: SETUP_USER_SUCCESS,
         payload: {
