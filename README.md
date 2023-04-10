@@ -24,6 +24,10 @@ Projeto que permite o usuário acompanhar e monitorar seu progresso na academia,
 
 ## Live: https://logbook-ux4z.onrender.com
 
+![logbook-ux4z onrender com_(Nest Hub Max) (1)](https://user-images.githubusercontent.com/103163622/231005790-5c0886ca-9ea9-4364-803c-a607a9f1cdac.png)
+![logbook-ux4z onrender com_(Nest Hub Max) (2)](https://user-images.githubusercontent.com/103163622/231005818-b11e3dc8-f882-4de5-80d5-28d9a30c0276.png)
+![logbook-ux4z onrender com_(Nest Hub Max) (3)](https://user-images.githubusercontent.com/103163622/231005874-17d3c727-a7e6-44e9-8694-f7e5987b5b04.png)
+
 ## INSTALLATION
 - install dependencies with `npm install` command
 - create .env and provide correct values: 
